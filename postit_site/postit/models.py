@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from django.db.models.signals import post_save
 #from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from django.dispatch import receiver
 
 class Post(models.Model):
     """This class represents the meetup model."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
     title = models.CharField(max_length=255, blank=False, unique=True)
     text = models.TextField(max_length=255, blank=False)
     published_date = models.DateTimeField(default=timezone.now)
