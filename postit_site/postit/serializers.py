@@ -17,7 +17,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'published_date')
               
 
-class PostListSerializer(serializers.ModelSerializer):
+class PostCreateUpdateSerializer(serializers.ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
 
     class Meta:
@@ -27,4 +27,15 @@ class PostListSerializer(serializers.ModelSerializer):
             'title', 
             'text',
             'published_date')
-       
+
+class PostListSerializer(serializers.ModelSerializer):
+    """Serializer to map the Model instance into JSON format."""
+
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = Post
+        fields = ( 
+            'user',
+            'title', 
+            'text',
+            'published_date')       
