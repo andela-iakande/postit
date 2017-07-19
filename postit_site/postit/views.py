@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import generics, permissions
 #from .permissions import IsAuthor
@@ -43,8 +44,19 @@ class PostDetailAPIView(generics.RetrieveAPIView):
 
 class PostListAPIView(generics.ListAPIView):
     """This class defines the create behavior of our rest api."""
-    queryset = Post.objects.all()
     serializer_class = PostListSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = Post.objects.all()
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query)|
+                Q(text__icontains=query)
+            ).distinct()
+        return queryset_list    
+
+
 
 class PostUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Post.objects.all()
