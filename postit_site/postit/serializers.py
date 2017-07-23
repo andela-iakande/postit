@@ -1,41 +1,70 @@
-from rest_framework import serializers
-from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework.serializers import(
+    ModelSerializer,
+    HyperlinkedIdentityField,
+    SerializerMethodField
+    )
+
 from .models import Post
-from rest_framework.serializers import ModelSerializer
 
-class PostDetailSerializer(serializers.ModelSerializer):
+class PostCreateUpdateSerializer(ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
 
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Post
-        fields = (
-            'id', 
+        fields = [ 
+            #'id',
             'title', 
-            'text',
-            'published_date')
-              
+            #'slug',
+            'content',
+            'publish',
+           
+        ]
+post_detail_url = HyperlinkedIdentityField(
+        view_name='posts-api:detail',
+        lookup_field='slug'
+        )               
 
-class PostCreateUpdateSerializer(serializers.ModelSerializer):
-    """Serializer to map the Model instance into JSON format."""
-
+class PostDetailSerializer(ModelSerializer):
+    url=post_detail_url
+    user = SerializerMethodField()
+    markdown = SerializerMethodField()
     class Meta:
-        """Meta class to map serializer's fields with the model fields."""
         model = Post
-        fields = ( 
-            'title', 
-            'text',
-            'published_date')
-
-class PostListSerializer(serializers.ModelSerializer):
-    """Serializer to map the Model instance into JSON format."""
-
-    class Meta:
-        """Meta class to map serializer's fields with the model fields."""
-        model = Post
-        fields = ( 
+        fields = [
             'user',
+            'url',
+            'id',
             'title', 
-            'text',
-            'published_date')       
+            'slug',
+            'markdown',
+            'content',
+            'publish'
+        ]
+    def get_markdown(self, obj):
+        return obj.get_markdown()      
+    
+    def get_user(self, obj):
+        return str(obj.user.username)      
+
+class PostListSerializer(ModelSerializer):
+    url=post_detail_url
+    user = SerializerMethodField()
+    delete_url = HyperlinkedIdentityField(
+        view_name='posts-api:delete',
+        lookup_field='slug'
+        )
+    class Meta:
+        model = Post
+        fields = [
+            'url',
+            'user',
+            'title',  
+            'content',
+            'publish',
+            'delete_url'
+        ]  
+
+    def get_user(self, obj):
+        return str(obj.user.username)    
+           
