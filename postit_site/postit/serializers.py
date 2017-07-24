@@ -1,10 +1,12 @@
 from rest_framework.serializers import(
     ModelSerializer,
     HyperlinkedIdentityField,
-    SerializerMethodField
+    SerializerMethodField,
     )
 
 from .models import Post
+from comments.models import Comment
+from comments.serializers import CommentSerializer
 
 class PostCreateUpdateSerializer(ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
@@ -13,9 +15,7 @@ class PostCreateUpdateSerializer(ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = Post
         fields = [ 
-            #'id',
             'title', 
-            #'slug',
             'content',
             'publish',
            
@@ -29,6 +29,7 @@ class PostDetailSerializer(ModelSerializer):
     url=post_detail_url
     user = SerializerMethodField()
     markdown = SerializerMethodField()
+    comments = SerializerMethodField()
     class Meta:
         model = Post
         fields = [
@@ -39,13 +40,23 @@ class PostDetailSerializer(ModelSerializer):
             'slug',
             'markdown',
             'content',
-            'publish'
+            'publish',
+            'comments'
         ]
     def get_markdown(self, obj):
         return obj.get_markdown()      
     
     def get_user(self, obj):
-        return str(obj.user.username)      
+        return str(obj.user.username)
+       
+    def get_comments(self, obj): 
+        c_qs = Comment.objects.filter_by_instance(obj)
+        comments = CommentSerializer(c_qs, many=True).data
+        return comments    
+              
+
+        comments = Comment.objects.filter_by_instance(obj)
+            
 
 class PostListSerializer(ModelSerializer):
     url=post_detail_url

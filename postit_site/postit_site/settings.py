@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'crispy_forms',
-    # 'markdown_deux',
     # 'pagedown',
+    'comments',
 
     'rest_framework',
     'postit',
