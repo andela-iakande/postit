@@ -12,31 +12,18 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from markdown import *
 
-#from markdown_deux import markdown
-#from .utils import get_read_time
-# from comments.models import Comment
-
-# Create your models here.
-# MVC MODEL VIEW CONTROLLER
-
-
-#Post.objects.all()
-#Post.objects.create(user=user, title="Some time")
 
 class PostManager(models.Manager):
     def active(self, *args, **kwargs):
-        # Post.objects.all() = super(PostManager, self).all()
         return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
 
 
 def upload_to_location(instance, filename):
-    #filebase, extension = filename.split(".")
-    #return "%s/%s.%s" %(instance.id, instance.id, extension)
     PostModel = instance.__class__
     new_id = PostModel.objects.order_by("id").last().id + 1
     """
-    instance.__class__ gets the model Post. We must use this method because the model is defined below.
-    Then create a queryset ordered by the "id"s of each object, 
+    instance.__class__ gets the model Post.This method is important because the model is defined below.
+    Then a queryset ordered by the "id"s of each object is created, 
     Then we get the last object in the queryset with `.last()`
     Which will give us the most recently created Model instance
     We add 1 to it, so we get what should be the same id as the the post we are creating.
@@ -44,14 +31,14 @@ def upload_to_location(instance, filename):
     return "%s/%s" %(new_id, filename)
 
 class Post(models.Model):
-    """This class represents the meetup model."""
+    """This class represents the postit model."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
     slug = models.SlugField(max_length=50, blank=False, unique=True)
     title = models.CharField(max_length=255, blank=False, unique=True)
     content = models.TextField(max_length=255, blank=False)
     publish = models.DateTimeField(default=timezone.now)
     draft = models.BooleanField(default=False)
-    read_time =  models.IntegerField(default=0) # models.TimeField(null=True, blank=True) #assume minutes
+    read_time =  models.IntegerField(default=0)  #assume minutes
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 
@@ -107,9 +94,7 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 
         if instance.content:
             html_string = instance.get_markdown()
-            # read_time_var = get_read_time(html_string)
-            # instance.read_time = read_time_var
-
+           
 pre_save.connect(pre_save_post_receiver, sender=Post)        
         
     
