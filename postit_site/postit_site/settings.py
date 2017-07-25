@@ -37,10 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'crispy_forms',
-    # 'pagedown',
     'comments',
-
+    'users',
     'rest_framework',
     'postit',
    
@@ -125,3 +123,41 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    )    
+}
+
+'''
+curl -X POST -d "username=jed&password=password123" http://127.0.0.1:8000/api/auth/token/
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1LCJ1c2VybmFtZSI6ImplZCIsImV4cCI6MTUwMDkzODk5MywiZW1haWwiOiJqZWRAeWFob28uY29tIn0.5NtWU9VV7nMRjKG7Xe5wLs2O2q3HH5R9noyRSQPraEs"
+ 
+curl -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1LCJ1c2VybmFtZSI6ImplZCIsImV4cCI6MTUwMDkzODk5MywiZW1haWwiOiJqZWRAeWFob28uY29tIn0.5NtWU9VV7nMRjKG7Xe5wLs2O2q3HH5R9noyRSQPraEs" http://127.0.0.1:8000/api/comments/
+
+curl -X POST -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1LCJ1c2VybmFtZSI6ImplZCIsImV4cCI6MTUwMDk0MDMyMSwiZW1haWwiOiJqZWRAeWFob28uY29tIn0.xgf34GJ6DpMurTdF60-yYbF-ihf-YgXdbc0Na2RElmY" -H "Content-Type: application/json" -d '{"content":"Be Prepared"}' http://127.0.0.1:8000/api/comments/create/?slug=data-science&type=post
+
+
+curl -X POST -H "Authorization: JWT  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1LCJ1c2VybmFtZSI6ImplZCIsImV4cCI6MTUwMDk0MDMyMSwiZW1haWwiOiJqZWRAeWFob28uY29tIn0.xgf34GJ6DpMurTdF60-yYbF-ihf-YgXdbc0Na2RElmY._i5wEqJ_OO8wNiVVNAWNPGjGaO7OzChY0UzONgw06D0
+" -H "Content-Type: application/json" -d '{"content”:”This is interesting”}’ 'http://127.0.0.1:8000/api/comments/create/?slug=new-title&type=post&parent_id=3' 
+
+'''
+
+
+
+
+
+
+
+
+
+

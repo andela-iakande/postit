@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from rest_framework_jwt.views import obtain_jwt_token
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include("postit.urls", namespace = 'postit')),
+    url(r'^api/auth/token/', obtain_jwt_token),
+    url(r'^api/users/', include("users.urls", namespace = 'users-api')),
     url(r'^api/comments/', include("comments.urls", namespace = 'comments-api')),
     url(r'^api/posts/', include("postit.urls", namespace = 'posts-api')),
 ]
