@@ -1,4 +1,3 @@
-
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 
@@ -9,6 +8,7 @@ from rest_framework.serializers import (
     ValidationError
     )
 from rest_framework import serializers
+from users.serializers import UserDetailSerializer
 from comments.models import Comment
 User = get_user_model()
 
@@ -100,18 +100,20 @@ class CommentListSerializer(ModelSerializer):
 
 class CommentChildSerializer(serializers.ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
-
+    user = UserDetailSerializer(read_only=True)
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Comment 
         fields = [
             'id',  
+            'user',
             'content',
             'timestamp'
         ]
 
 class CommentDetailSerializer(serializers.ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
+    user = UserDetailSerializer(read_only=True)
     reply_count = SerializerMethodField()
     content_object_url = SerializerMethodField()
     replies = SerializerMethodField() 
@@ -121,6 +123,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
         model = Comment 
         fields = [
             'id',
+            'user',
             'content_object_url', 
             'content',
             'reply_count',

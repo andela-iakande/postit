@@ -32,17 +32,19 @@ class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = 'slug'
+    permission_classes = [IsAuthenticated]
 
 class PostDeleteAPIView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = 'slug'   
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly ] 
+    permission_classes = [IsOwnerOrReadOnly ] 
 
 class PostListAPIView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostListSerializer
     pagination_class = PostPageNumberPagination
+    permission_classes = [AllowAny]
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Post.objects.all()
@@ -61,7 +63,7 @@ class PostUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = 'slug' 
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def perform_update(self, serializer):
         """Save the post data when creating a new Post."""
