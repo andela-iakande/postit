@@ -10,7 +10,7 @@ To setup and run the sample code, you're going to need `npm` from NodeJS availab
 
 ## Setup
 
-clone the repo
+To setup and run the sample code you need to clone the repo
         
 1. Create a virtualenv to isolate our package dependencies locally
     virtual env
