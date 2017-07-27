@@ -56,6 +56,6 @@ class UserLoginAPIView(APIView):
                 login(request, user[0])
                 return Response(new_data, status=HTTP_200_OK)
             else:
-                return Response({'message': 'Does not exist'}, status=HTTP_404_NOT_FOUND)
+                return Response({'message': 'User Does not exist'}, status=HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)    
 
