@@ -22,7 +22,6 @@ class PostCreateAPIView(generics.CreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = Post.objects.all()
     serializer_class = PostCreateUpdateSerializer
-    permission_classes = [IsAuthenticated]
    
     def perform_create(self, serializer):
         """Save the post data when creating a new Post."""
@@ -32,7 +31,7 @@ class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = 'slug'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class PostDeleteAPIView(generics.DestroyAPIView):
     queryset = Post.objects.all()

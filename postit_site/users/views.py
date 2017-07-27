@@ -1,9 +1,9 @@
 from django.db.models import Q
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 
 
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST,HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 
@@ -45,12 +45,17 @@ class UserLoginAPIView(APIView):
     serializer_class = UserLoginSerializer
     permission_classes = [AllowAny]
     
-    def post(self, request, *args, **kwargs): 
+    def post(self, request, *args, **kwargs):
     # defines the POST method    
         data = request.data
         serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             new_data = serializer.data
-            return Response(new_data, status=HTTP_200_OK)
+            user = User.objects.filter(email=new_data['email'])
+            if user:
+                login(request, user[0])
+                return Response(new_data, status=HTTP_200_OK)
+            else:
+                return Response({'message': 'User Does not exist'}, status=HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)    
 

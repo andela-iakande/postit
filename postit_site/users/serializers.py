@@ -60,16 +60,6 @@ class UserCreateSerializer(ModelSerializer):
 
         return value
 
-    def validate_password(self, value):
-        # Validates the current email and checks if the user email already exists
-        data = self.get_initial()
-        password1 = data.get("password2")
-        password2 = value
-        if password1 != password2:
-            raise ValidationError("password must match.")
-
-        return value
-
     def validate_email2(self, value):
         # validates and ensure initial email is the same as second email
         data = self.get_initial()
@@ -96,6 +86,7 @@ class UserLoginSerializer(ModelSerializer):
     # Authenticates a user via email and password  
     token = CharField(allow_blank=True, read_only=True)
     email = EmailField(label='Email Address')
+    
     class Meta:
         model = User
         fields = [
