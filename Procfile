@@ -1,0 +1,1 @@
+web: gunicorn postit_site.wsgi --log-file -
