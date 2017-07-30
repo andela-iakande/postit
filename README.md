@@ -1,8 +1,12 @@
+
+# postit
+
 # API for postIT with Django Rest Framework 
 
 This sample project have to do with users been able to create posts and also add comments.
 
 The app can be accessed on heroku via https://postitxperts.herokuapp.com/
+
 
 ## Dependencies
 
@@ -221,4 +225,4 @@ To setup and run the sample code you need to clone the repo
 
   
   
-  
+
